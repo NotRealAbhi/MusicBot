@@ -9,5 +9,5 @@ async def main():
     await idle()  # Keeps the bot running
 
 if __name__ == "__main__":
-    from pyrogram.idle import idle
+    from pyrogram import idle
     asyncio.run(main())
