@@ -1,4 +1,5 @@
 import asyncio
+from pyrogram import filters
 from pyrogram.errors import BadMsgNotification
 from Call.Player.Calls import bot, call
 
@@ -30,6 +31,11 @@ async def main():
             await asyncio.sleep(1)  # Keeps the bot running until manually stopped
     except KeyboardInterrupt:
         await on_shutdown()
+
+@bot.on_message(filters.command("start"))
+async def start(client, message):
+    await message.reply("Bot is online!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
