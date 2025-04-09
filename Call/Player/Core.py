@@ -10,20 +10,19 @@ from pytgcalls.types import MediaStream, AudioQuality, VideoQuality
 sample_audio = "http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4"
 
 
-async def play_audio(chat_id: int, audio_url: str = sample_audio):
-    """Play an audio stream in VC."""
+async def stream_audio(chat_id, file_path):
     try:
         await call.play(
             chat_id,
             MediaStream(
-                media_path=audio_url,
-                audio_parameters=AudioQuality.STUDIO,
+                media_path=file_path,
+                audio_parameters=AudioQuality.HIGH,
                 video_flags=MediaStream.Flags.IGNORE
             )
         )
-        return True, "🎶 Audio started"
+        return True, None
     except Exception as e:
-        return False, f"❌ Error: <code>{e}</code>"
+        return False, f"Error: <code>{e}</code>"
 
 
 async def play_video(chat_id: int, video_url: str = sample_audio, quality: str = "SD_480p"):
