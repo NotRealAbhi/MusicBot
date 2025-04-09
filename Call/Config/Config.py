@@ -3,7 +3,7 @@ import os
 # Bot Configuration
 API_ID = int(os.getenv("API_ID", "1234567"))  # Your API ID from Telegram
 API_HASH = os.getenv("API_HASH", "your_api_hash_here")  # Your API Hash from Telegram
-BOT_TOKEN = os.getenv("BOT_TOKEN", "your_bot_token_here")  # Your Bot Token from @BotFather
+BOT_TOKEN = os.getenv("BOT_TOKEN", "7513601323:AAHe3cZhJDwVXW_1w_DYQR7-hCfeSilQ6Ic")  # Your Bot Token from @BotFather
 
 # Bot Owner and Sudo Users
 OWNER_ID = int(os.getenv("OWNER_ID", "123456789"))  # Your Telegram ID as the bot owner
