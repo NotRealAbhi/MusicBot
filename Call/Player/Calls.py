@@ -7,7 +7,7 @@ from pytgcalls import PyTgCalls, filters
 from pytgcalls.types.stream import StreamEnded
 from pytgcalls.types import Update
 from pyrogram import Client
-from Config.Config import API_ID, API_HASH, BOT_TOKEN
+from Call.Config import API_ID, API_HASH, BOT_TOKEN
 
 # ✅ Initialize bot client
 bot = Client(
