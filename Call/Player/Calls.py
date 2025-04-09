@@ -15,7 +15,7 @@ bot = Client(
     api_id=API_ID,
     api_hash=API_HASH,
     bot_token=BOT_TOKEN,
-    plugins=dict(root="Plugins")  # Optional: auto-load Plugins/
+    plugins=dict(root="Call.Plugins")  # Optional: auto-load Plugins/
 )
 
 # ✅ Initialize PyTgCalls for bot
