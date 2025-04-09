@@ -26,7 +26,8 @@ async def on_shutdown():
 async def main():
     try:
         await start_bot()
-        await bot.idle()  # Keeps the bot running until manually stopped
+        while True:
+            await asyncio.sleep(1)  # Keeps the bot running until manually stopped
     except KeyboardInterrupt:
         await on_shutdown()
 
