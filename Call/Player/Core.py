@@ -50,6 +50,17 @@ async def get_now_playing():
 
     return f"🎶 Now Playing: <code>{song_title}</code>\n{seek_bar}\n⏰ {current_position}/{total_duration} seconds"
 
+async def show_queue():
+    """Shows the current song queue"""
+    if not song_queue:
+        return "❌ No songs in the queue."
+    
+    queue_list = "🎶 **Current Queue:**\n"
+    for idx, song in enumerate(song_queue, 1):
+        queue_list += f"{idx}. {song}\n"
+    
+    return queue_list
+
 
 async def play_video(chat_id: int, video_url: str = sample_audio, quality: str = "SD_480p"):
     """Play a video stream with audio in VC."""
