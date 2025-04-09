@@ -162,3 +162,34 @@ async def stop(chat_id: int):
     except Exception as e:
         return f"❌ Error: <code>{e}</code>"
       
+import os
+import requests
+
+async def download_media(chat_id, media_url):
+    """Downloads the media file (audio/video) to a local file and returns the file path."""
+    
+    # Define a download folder where the media files will be stored
+    download_folder = "downloads"
+    os.makedirs(download_folder, exist_ok=True)  # Create folder if not exists
+    
+    # Generate a unique file name based on chat_id and media URL or a timestamp
+    file_name = f"{chat_id}_{media_url.split('/')[-1]}"
+    file_path = os.path.join(download_folder, file_name)
+    
+    try:
+        # Download the media from the URL (you can adjust the method to handle other sources)
+        response = requests.get(media_url, stream=True)
+        
+        if response.status_code == 200:
+            # Open the file in write-binary mode
+            with open(file_path, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        file.write(chunk)
+            return file_path
+        else:
+            raise Exception(f"Failed to download the media. Status code: {response.status_code}")
+    
+    except Exception as e:
+        print(f"Error while downloading media: {e}")
+        return None
