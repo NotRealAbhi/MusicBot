@@ -105,6 +105,15 @@ async def skip_song(chat_id):
     else:
         return "❌ No more songs in the queue to skip."
         
+async def send_welcome_message(chat_id, message: str):
+    """Sends a custom welcome message to the given chat."""
+    try:
+        # Send the custom welcome message to the chat
+        await call.send_message(chat_id, message)
+        return True, None
+    except Exception as e:
+        return False, f"Error: <code>{e}</code>"
+
 
 async def pause(chat_id: int):
     try:
