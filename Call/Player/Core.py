@@ -11,12 +11,15 @@ sample_audio = "http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4
 
 current_song = None
 current_position = 0
+song_queue = []  # List of songs to be played
+
 
 async def stream_audio(chat_id, file_path):
     global current_song, current_position
     try:
         current_song = file_path  # Set the current song
         current_position = 0  # Reset position when a new song starts
+        song_queue.append(file_path)
         await call.play(
             chat_id,
             MediaStream(
@@ -73,6 +76,24 @@ async def play_video(chat_id: int, video_url: str = sample_audio, quality: str =
     except Exception as e:
         return False, f"❌ Error: <code>{e}</code>"
 
+async def skip_song(chat_id):
+    """Skip the current song and play the next in the queue"""
+    global current_song, song_queue
+    if len(song_queue) > 1:
+        song_queue.pop(0)  # Remove the current song
+        next_song = song_queue[0]  # Get the next song in the queue
+        current_song = next_song
+        await call.play(
+            chat_id,
+            MediaStream(
+                media_path=next_song,
+                audio_parameters=AudioQuality.STUDIO,
+            ),
+        )
+        return "⏩ Skipped to the next song!"
+    else:
+        return "❌ No more songs in the queue to skip."
+        
 
 async def pause(chat_id: int):
     try:
