@@ -1,6 +1,12 @@
 import asyncio
 from Call.Player.Calls import bot, call
 
+
+@bot.on_message(filters.command("start"))
+ async def start(client, message):
+     await message.reply("Bot is online!")
+
+
 async def start_bot():
     try:
         await bot.start()  # Start the bot
@@ -17,6 +23,3 @@ if __name__ == "__main__":
     asyncio.run(start_bot())
 
 
-@bot.on_message(filters.command("start"))
- async def start(client, message):
-     await message.reply("Bot is online!")
