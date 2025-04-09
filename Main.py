@@ -1,41 +1,17 @@
 import asyncio
-from pyrogram import filters
-from pyrogram.errors import BadMsgNotification
 from Call.Player.Calls import bot, call
 
 async def start_bot():
     try:
-        print("Bot is starting...")
-        await bot.start()
-        print("Bot started successfully.")
-        await call.start()
-        print("PyTgCalls initialized.")
-    except BadMsgNotification as e:
-        print(f"Error: {e}")
-        print("Bad message notification, likely due to a time sync issue. Please sync the bot time.")
+        await bot.start()  # Start the bot
+        print("✅ Bot started successfully!")
     except Exception as e:
-        print(f"Unexpected error: {e}")
-        print("Exiting...")
-        await bot.stop()
+        print(f"⚠️ Error starting the bot: {e}")
 
-async def on_shutdown():
-    print("Bot is shutting down...")
-    await call.stop()
-    await bot.stop()
-    print("Bot stopped.")
+    # Running the PyTgCalls bot in a loop
+    await call.start()
 
-async def main():
-    try:
-        await start_bot()
-        while True:
-            await asyncio.sleep(1)  # Keeps the bot running until manually stopped
-    except KeyboardInterrupt:
-        await on_shutdown()
-
-@bot.on_message(filters.command("start"))
-async def start(client, message):
-    await message.reply("Bot is online!")
-
-
+# Run the bot
 if __name__ == "__main__":
-    asyncio.run(main())
+    import asyncio
+    asyncio.run(start_bot())
