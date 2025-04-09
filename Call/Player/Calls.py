@@ -20,13 +20,14 @@ bot = Client(
 # ✅ Initialize PyTgCalls for bot
 call = PyTgCalls(bot)
 
-
+# ✅ Handling stream end event
 @call.on_update(filters.stream_end())
 async def on_stream_end_handler(client: PyTgCalls, update: Update):
     chat_id = update.chat_id
     try:
+        # Attempting to leave the call after stream ends
         await call.leave_call(chat_id)
         print(f"❌ Stream ended, left VC in {chat_id}")
     except Exception as e:
+        # Catching any errors while trying to leave the call
         print(f"⚠️ Error leaving VC after stream end in {chat_id}: {e}")
-      
