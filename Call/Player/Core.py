@@ -9,9 +9,14 @@ from pytgcalls.types import MediaStream, AudioQuality, VideoQuality
 # Example audio URL for testing
 sample_audio = "http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4"
 
+current_song = None
+current_position = 0
 
 async def stream_audio(chat_id, file_path):
+    global current_song, current_position
     try:
+        current_song = file_path  # Set the current song
+        current_position = 0  # Reset position when a new song starts
         await call.play(
             chat_id,
             MediaStream(
@@ -23,6 +28,24 @@ async def stream_audio(chat_id, file_path):
         return True, None
     except Exception as e:
         return False, f"Error: <code>{e}</code>"
+
+async def get_now_playing():
+    """Returns the current song title and a seek bar"""
+    global current_song, current_position
+    if not current_song:
+        return "No song is playing right now."
+    
+    # Simple ASCII seek bar (replace with actual time data for accurate progress)
+    total_duration = 300  # Example song length in seconds (5 minutes)
+    seek_bar = "🔘" * (current_position // 10) + "🟩" * ((total_duration - current_position) // 10)
+    song_title = current_song if current_song else "Unknown Song"
+    
+    # Update the position (simulating it for now)
+    current_position += 1
+    if current_position > total_duration:
+        current_position = 0  # Reset after song ends
+
+    return f"🎶 Now Playing: <code>{song_title}</code>\n{seek_bar}\n⏰ {current_position}/{total_duration} seconds"
 
 
 async def play_video(chat_id: int, video_url: str = sample_audio, quality: str = "SD_480p"):
