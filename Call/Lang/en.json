@@ -1,1 +1,9 @@
 
+{
+    "start": "👋 Welcome to the Music Bot!",
+    "play_success": "▶️ Now playing: {title}",
+    "no_results": "❌ No results found.",
+    "added_to_queue": "➕ Added to queue: {title}",
+    "stream_stopped": "🛑 Stream has ended.",
+    "language_set": "✅ Language set to English!"
+}
