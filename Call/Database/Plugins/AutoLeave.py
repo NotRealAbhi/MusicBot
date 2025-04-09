@@ -3,50 +3,52 @@ Telegram @NotRealBhi
 Copyright ©️ 2025
 """
 
-from pytgcalls import PyTgCalls
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.errors import UserAlreadyParticipant
 import asyncio
 
-# Initialize PyTgCalls
-call = PyTgCalls(Client("music_bot"))
+# Automatically leave empty voice chats
+VOICE_CHAT_TIMEOUT = 60  # Time to wait before leaving the empty voice chat (in seconds)
 
-# This function will automatically leave a VC when no one is left in it
-async def check_empty_vc():
-    """Checks if the voice chat is empty, and leaves if true."""
-    while True:
-        await asyncio.sleep(10)  # Check every 10 seconds
-        for chat_id in call.active_calls:
-            # Check if there are no participants in the voice chat
-            participants = await call.get_participants(chat_id)
-            if len(participants) == 0:
-                await call.leave_call(chat_id)
-                print(f"Bot left the voice chat {chat_id} as it was empty.")
+@Client.on_message(filters.voice_chat_started)
+async def on_voice_chat_started(client: Client, message):
+    """Join a voice chat when it starts."""
+    try:
+        await client.join_voice_chat(message.chat.id)
+    except UserAlreadyParticipant:
+        pass  # If already in the voice chat, do nothing
 
-# Start the background task to check for empty voice chats
-async def start_auto_leave():
-    """Starts the auto-leave background task."""
-    await check_empty_vc()
 
-@Client.on_message(filters.command("joinvc") & filters.group)
-async def join_vc(client: Client, message: Message):
-    """Joins a voice chat."""
+@Client.on_message(filters.voice_chat_ended)
+async def on_voice_chat_ended(client: Client, message):
+    """Leave the voice chat when it ends."""
+    await client.leave_voice_chat(message.chat.id)
+
+
+@Client.on_message(filters.voice_chat_participant_left)
+async def on_participant_left(client: Client, message):
+    """Check if the VC is empty and leave after a timeout."""
     chat_id = message.chat.id
-    # Here, you can add your VC joining logic
-    await call.join_call(chat_id)
-    await message.reply("🎧 Joined the voice chat!")
+    
+    # Check the number of participants in the voice chat
+    members = await client.get_chat_members(chat_id, filter="administrators")
+    
+    if len(members) == 1:  # Only admin is left
+        await asyncio.sleep(VOICE_CHAT_TIMEOUT)  # Wait for a while before checking again
+        updated_members = await client.get_chat_members(chat_id, filter="administrators")
+        
+        if len(updated_members) == 1:  # Still only admin
+            await client.leave_voice_chat(chat_id)
+            print(f"Left the voice chat in {chat_id} due to inactivity.")
 
-@Client.on_message(filters.command("leavevc") & filters.group)
-async def leave_vc(client: Client, message: Message):
-    """Leaves a voice chat."""
+
+@Client.on_message(filters.voice_chat_participant_joined)
+async def on_participant_joined(client: Client, message):
+    """Keep track of participants joining and reset the timer if necessary."""
     chat_id = message.chat.id
-    await call.leave_call(chat_id)
-    await message.reply("👋 Left the voice chat!")
-
-# Start the background task when the bot is initialized
-@Client.on_ready
-async def on_ready(client: Client):
-    """Starts the auto leave check when the bot is ready."""
-    await start_auto_leave()
-
-
+    
+    # Reset timeout if the participant count goes above 1
+    members = await client.get_chat_members(chat_id, filter="administrators")
+    
+    if len(members) > 1:  # There are more than 1 participant
+        print(f"Bot will stay in the voice chat {chat_id} because there are {len(members)} participants.")
