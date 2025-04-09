@@ -3,7 +3,7 @@ Telegram @NotRealAbhi
 Copyright ©️ 2025
 """
 
-from Player.Calls import call
+from .Calls import call
 from pytgcalls.types import MediaStream, AudioQuality, VideoQuality
 
 # Example audio URL for testing
