@@ -15,3 +15,8 @@ async def start_bot():
 if __name__ == "__main__":
     import asyncio
     asyncio.run(start_bot())
+
+
+@bot.on_message(filters.command("start"))
+ async def start(client, message):
+     await message.reply("Bot is online!")
